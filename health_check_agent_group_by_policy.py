@@ -97,7 +97,7 @@ def SendAlertToTheHive(THEHIVE_SERVER, THEHIVE_PORT, THEHIVE_TOKEN, alert):
 
     api = TheHiveApi(f"http://{THEHIVE_SERVER}:{THEHIVE_PORT}", THEHIVE_TOKEN) 
     alert = Alert(
-        title='Anomal Loss Dataset', 
+        title='SOC Agent Health Check', 
         description=alert, 
         type='external', 
         source=f'instance-{str(datetime.now())}', 

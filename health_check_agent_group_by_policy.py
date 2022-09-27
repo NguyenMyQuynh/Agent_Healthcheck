@@ -110,7 +110,7 @@ def SendAlertToTelegram(TELEGRAM_TOKEN, TELEGRAM_ID, alert):
     telegram_alert = telegram.Bot(TELEGRAM_TOKEN)
     telegram_alert.send_message(chat_id=TELEGRAM_ID, text=alert)
 
-def change(FLEET_URL, FLEET_PORT, FLEET_USERNAME, FLEET_PASSWORD, id):
+def change_id_to_name_policy(FLEET_URL, FLEET_PORT, FLEET_USERNAME, FLEET_PASSWORD, id):
     auth = (FLEET_USERNAME, FLEET_PASSWORD)
 
     if FLEET_URL == "hsoc.vn/monitor":
@@ -160,7 +160,8 @@ def main():
     alert = "\t=== SOC Agent Health Check ===\n"
     for i in config.FLEET_SERVERS:
         online, offline = AgentStatus(config.FLEET_SERVERS[i]["FLEET_URL"], config.FLEET_SERVERS[i]["FLEET_PORT"], config.FLEET_SERVERS[i]["FLEET_USERNAME"], config.FLEET_SERVERS[i]["FLEET_PASSWORD"])
-        
+        if i != 1:
+            alert += "_______________________________\n"
         alert += f">>>> {config.FLEET_SERVERS[i]['FLEET_URL']} <<<<\n"
         if offline == 0:
             alert += f"Agents online: {online},\t agent offline: {offline}✅\n"
@@ -175,13 +176,12 @@ def main():
 
         listAgentOfflineSeperateByPolicy = GetAgentOnlineSeperateByPolicy(offline_agents)
         listAgentOnlineSeperateByPolicy = GetAgentOnlineSeperateByPolicy(online_agents)
-        alert += "_______________________________\n"
 
         tmp = 0
         for i, policy in enumerate(listAgentOfflineSeperateByPolicy):
                     id = policy
-                    id = change(config.FLEET_SERVERS[1]["FLEET_URL"], config.FLEET_SERVERS[1]["FLEET_PORT"], config.FLEET_SERVERS[1]["FLEET_USERNAME"], config.FLEET_SERVERS[1]["FLEET_PASSWORD"], id)
-                    alert += f"\n Policy{i+1}: {id} \n"
+                    id = change_id_to_name_policy(config.FLEET_SERVERS[1]["FLEET_URL"], config.FLEET_SERVERS[1]["FLEET_PORT"], config.FLEET_SERVERS[1]["FLEET_USERNAME"], config.FLEET_SERVERS[1]["FLEET_PASSWORD"], id)
+                    alert += f"\nPolicy{i+1}: {id} \n"
                     if policy not in listAgentOnlineSeperateByPolicy:
                         alert += f"Onine: 0   "
                     else:
@@ -206,8 +206,8 @@ def main():
         for i, policy in enumerate(listAgentOnlineSeperateByPolicy):
             if policy not in listAgentOfflineSeperateByPolicy:
                 id = policy
-                id = change(config.FLEET_SERVERS[1]["FLEET_URL"], config.FLEET_SERVERS[1]["FLEET_PORT"], config.FLEET_SERVERS[1]["FLEET_USERNAME"], config.FLEET_SERVERS[1]["FLEET_PASSWORD"], id)
-                alert += f"\n Policy{tmp+1}: {id} ✅ \n"
+                id = change_id_to_name_policy(config.FLEET_SERVERS[1]["FLEET_URL"], config.FLEET_SERVERS[1]["FLEET_PORT"], config.FLEET_SERVERS[1]["FLEET_USERNAME"], config.FLEET_SERVERS[1]["FLEET_PASSWORD"], id)
+                alert += f"\nPolicy{tmp+1}: {id} ✅ \n"
                 tmp+=1
                 alert += f"Online: {len(listAgentOnlineSeperateByPolicy[policy])}   "
                 alert += f"Offline: 0 \n"

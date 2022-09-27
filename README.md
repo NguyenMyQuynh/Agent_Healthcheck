@@ -6,4 +6,4 @@ You can see the state of all your Elastic Agents in Fleet. On the Agents page, y
 
 ![image](https://user-images.githubusercontent.com/62002485/192576671-255ee17b-c715-4d10-9bca-aef261fdc455.png)
 
-<i> This repository includes tools to health check Elastic Agents in Fleet. 
+<i> This repository includes tools to health check Elastic Agents in Fleet and send alert to TheHive and Telegram.
